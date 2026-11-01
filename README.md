@@ -22,6 +22,8 @@ git clone https://github.com/Mokkori-Tom/nvim-config ~/nvim-config
 
 アイコンには Nerd Font 入りのフォントが要る。Termux から SSH で使うだけなら、Termux で `termux-font.sh` だけ実行すればよい。
 
+Termux と SSH 先（コピー用のコマンドが無いとき）では、ヤンクした内容を OSC 52 で端末のクリップボードへ送る。他のアプリからの貼り付けは端末の長押しメニューで。
+
 ## よく使うキー
 
 Leader は Space。
