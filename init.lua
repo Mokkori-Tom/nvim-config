@@ -7,6 +7,27 @@ o.relativenumber = true
 o.cursorline = true
 o.helplang = "ja"
 o.clipboard = "unnamedplus"
+
+-- Termux や SSH 先ではコピーを OSC 52 で端末のクリップボードへ送る（Termux:API 不要）。
+-- 端末からの読み戻しは Termux が答えないので、貼り付けは最後にコピーした内容を返す。
+local ssh_no_clip = vim.env.SSH_TTY and vim.fn["provider#clipboard#Executable"]() == ""
+if vim.env.TERMUX_VERSION or ssh_no_clip then
+  local osc52 = require("vim.ui.clipboard.osc52")
+  local last = { {}, "v" }
+  local function copy(reg)
+    local send = osc52.copy(reg)
+    return function(lines, regtype)
+      last = { lines, regtype }
+      send(lines, regtype)
+    end
+  end
+  local function paste() return last end
+  vim.g.clipboard = {
+    name = "OSC 52",
+    copy = { ["+"] = copy("+"), ["*"] = copy("*") },
+    paste = { ["+"] = paste, ["*"] = paste },
+  }
+end
 o.expandtab = true
 o.tabstop = 2
 o.shiftwidth = 2
