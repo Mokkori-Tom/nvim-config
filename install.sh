@@ -47,7 +47,8 @@ install_linux() {
 
 if [ -n "${TERMUX_VERSION:-}" ]; then
   pkg install -y neovim git ripgrep fd lazygit nodejs clang make
-  pkg install -y tree-sitter-cli || echo "tree-sitter CLI が入らなかった（構文ハイライトのパーサー導入に必要）" >&2
+  # tree-sitter CLI は Termux では tree-sitter パッケージに入っている（tree-sitter-cli は無い）
+  pkg install -y tree-sitter || echo "tree-sitter CLI が入らなかった（構文ハイライトのパーサー導入に必要）" >&2
   pkg install -y unzip
   "$HERE/termux-font.sh"
 else

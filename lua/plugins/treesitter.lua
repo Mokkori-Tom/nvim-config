@@ -11,7 +11,11 @@ return {
     lazy = false,
     build = ":TSUpdate",
     config = function()
-      require("nvim-treesitter").install(langs)
+      -- CLI が無ければパーサーは入れない（入らずにエラーが出続けるだけなので）。
+      -- nvim 同梱の lua / vim / vimdoc / query / markdown / c のハイライトはそのまま効く
+      if vim.fn.executable("tree-sitter") == 1 then
+        require("nvim-treesitter").install(langs)
+      end
       vim.api.nvim_create_autocmd("FileType", {
         callback = function(ev)
           if pcall(vim.treesitter.start, ev.buf) then
