@@ -1,5 +1,5 @@
 -- 日本語入力（SKK）。Lua だけで動き denops/Deno 不要
--- <C-j> でひらがな ⇔ 英数、l で英数、q でカタカナ
+-- <C-j> でひらがな ⇔ 英数、<C-k> でカタカナ ⇔ 英数、l で英数、q でカタカナ ⇔ ひらがな
 -- 辞書は install.sh が ~/.local/share/nvim/skk/SKK-JISYO.L に置く
 return {
   "nabehan/skk.nvim",
@@ -44,6 +44,18 @@ return {
           skk.toggle()
         end
       end, { desc = "SKK: ひらがな / 英数" })
+      -- <C-k> で ひらがなを経ずにカタカナへ（カタカナのときは英数へ戻す）。
+      -- Vim の <C-k>（ダイグラフ）の代わりになる
+      vim.keymap.set(m, "<C-k>", function()
+        if henkan.is_active() then
+          henkan.confirm()
+        elseif require("skk.capture").get_mode() == "kata" then
+          skk.disable()
+        else
+          require("skk.capture").set_mode("kata")
+          vim.notify("skk.nvim: " .. require("skk.capture").mode_label())
+        end
+      end, { desc = "SKK: カタカナ / 英数" })
     end
 
     local ESC = string.char(27)
