@@ -25,6 +25,21 @@ return {
       mapping = cmp.mapping.preset.insert({
         ["<C-Space>"] = cmp.mapping.complete(),
         ["<CR>"] = cmp.mapping(enter, { "i" }),
+        -- Tab / Shift+Tab で候補を選ぶ（候補が無ければ普通の Tab）
+        ["<Tab>"] = cmp.mapping(function(fallback)
+          if cmp.visible() then
+            cmp.select_next_item()
+          else
+            fallback()
+          end
+        end, { "i" }),
+        ["<S-Tab>"] = cmp.mapping(function(fallback)
+          if cmp.visible() then
+            cmp.select_prev_item()
+          else
+            fallback()
+          end
+        end, { "i" }),
       }),
       sources = cmp.config.sources({ { name = "nvim_lsp" } }, { { name = "buffer" }, { name = "path" } }),
     })

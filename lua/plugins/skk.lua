@@ -1,5 +1,5 @@
 -- 日本語入力（SKK）。Lua だけで動き denops/Deno 不要
--- <C-j> でひらがな、l で半角英数、q でカタカナ
+-- <C-j> でひらがな ⇔ 英数、l で英数、q でカタカナ
 -- 辞書は install.sh が ~/.local/share/nvim/skk/SKK-JISYO.L に置く
 return {
   "nabehan/skk.nvim",
@@ -9,6 +9,34 @@ return {
     require("skk").setup({
       user_dictionary = vim.fn.stdpath("data") .. "/skk/SKK-JISYO.user",
     })
+
+    local skk = require("skk")
+    local henkan = require("skk.henkan.state")
+
+    -- 数字・記号は半角のまま。既定の L（全角英数）は大文字の打ち間違いで入りやすく、
+    -- 入ると ａｂ１２！ になるので無くす
+    require("skk.mode").CHAR_TRANSITIONS["L"] = nil
+
+    -- 速く打つと Shift が次の文字に残り、Tyo が TYo になって ▽*y（送り仮名）になる。
+    -- 読みがまだ1字も無いうちの大文字は、送りの始まりでなく続きとして読む
+    local start_okuri = henkan.start_okuri
+    henkan.start_okuri = function()
+      if henkan.current_reading() == "" then
+        return
+      end
+      start_okuri()
+    end
+
+    -- <C-j> で ひらがな ⇔ 英数 を切り替える（▽▼ の間は今までどおり確定）
+    for _, m in ipairs({ "i", "c" }) do
+      vim.keymap.set(m, "<C-j>", function()
+        if henkan.is_active() then
+          henkan.confirm()
+        else
+          skk.toggle()
+        end
+      end, { desc = "SKK: ひらがな / 英数" })
+    end
 
     local ESC = string.char(27)
     local pending_n -- Esc 直前に残っていた未確定の n を何に直すか
