@@ -49,6 +49,8 @@ if [ -n "${TERMUX_VERSION:-}" ]; then
   pkg install -y neovim git ripgrep fd lazygit nodejs clang make
   # tree-sitter CLI は Termux では tree-sitter パッケージに入っている（tree-sitter-cli は無い）
   pkg install -y tree-sitter || echo "tree-sitter CLI が入らなかった（構文ハイライトのパーサー導入に必要）" >&2
+  # mason の lua_ls は Termux で動かず、gopls・delve は go が要るので pkg で入れる
+  pkg install -y lua-language-server gopls delve || echo "LSP サーバーが入らなかった（lua・Go の補完に必要）" >&2
   pkg install -y unzip
   "$HERE/termux-font.sh"
 else
