@@ -6,13 +6,15 @@ return {
   version = "*",
   event = { "InsertEnter", "CmdlineEnter" },
   config = function()
-    -- 記号は半角にそろえる(既定の 。、「」 をやめる)。- は長音の ー のまま
+    -- 記号は半角にそろえる(既定の ー。、「」 をやめる)
     require("skk").setup({
       user_dictionary = vim.fn.stdpath("data") .. "/skk/SKK-JISYO.user",
       period = ".",
       comma = ",",
     })
     local kana_table = require("skk.kana_table")
+    kana_table["-"] = "-"
+    kana_table["z-"] = "ー" -- 長音はこちらで
     kana_table["["] = "["
     kana_table["]"] = "]"
 
