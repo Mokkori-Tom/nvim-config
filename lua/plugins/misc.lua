@@ -1,5 +1,11 @@
 return {
-  { "vim-jp/vimdoc-ja" }, -- 日本語ヘルプ
+  -- 日本語ヘルプ。lazy の :helptags が同梱の doc/tags-ja を書き換えて更新できなくなるので元に戻す
+  {
+    "vim-jp/vimdoc-ja",
+    build = function(plugin)
+      vim.fn.system({ "git", "-C", plugin.dir, "checkout", "--", "doc/tags-ja" })
+    end,
+  },
   { "tpope/vim-rails", ft = { "ruby", "eruby" } },
 
   -- カーソル下の URL などをブラウザで開く
