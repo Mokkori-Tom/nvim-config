@@ -38,6 +38,7 @@ Leader は Space。
 | `Ctrl+\` | 端末を開閉 |
 | `<leader>lg` / `Ctrl+g` | lazygit |
 | `<leader>?` | このバッファのキー一覧 |
+| `<leader>i` | カーソル位置の画像を浮いた窓で表示（Markdown など。カーソルを動かすと閉じる） |
 | `jk` | 挿入モードを抜ける |
 | `Tab` / `Shift+Tab` | 補完の候補を選ぶ（`Enter` で確定） |
 

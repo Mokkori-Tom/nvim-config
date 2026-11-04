@@ -26,7 +26,12 @@ return {
     priority = 1000,
     lazy = false,
     opts = function()
-      local opts = { dashboard = dashboard }
+      local opts = {
+        dashboard = dashboard,
+        -- インライン表示できない端末（tmux など）では、画像のパスにカーソルが乗るたびに
+        -- 浮いた窓で画像を出し、補完の窓のように見えて邪魔なので、<leader>i で出すときだけにする
+        image = { doc = { float = false } },
+      }
       for _, name in ipairs({
         "bigfile", "dashboard", "explorer", "image", "indent", "input", "notifier",
         "picker", "quickfile", "scope", "scroll", "statuscolumn", "words",
@@ -40,6 +45,7 @@ return {
       { "<leader>sg", function() Snacks.picker.grep() end, desc = "全文検索" },
       { "<leader>z", function() Snacks.zen.zoom() end, desc = "ズーム切替" },
       { "<leader>n", function() Snacks.notifier.show_history() end, desc = "通知の履歴" },
+      { "<leader>i", function() Snacks.image.hover() end, desc = "カーソル位置の画像を表示" },
       { "<leader>gg", function() Snacks.lazygit() end, desc = "Lazygit" },
       { "<leader>gB", function() Snacks.gitbrowse() end, desc = "GitHub で開く（ブラウザ）" },
       { "]]", function() Snacks.words.jump(1) end, desc = "同じ語の次へ" },
